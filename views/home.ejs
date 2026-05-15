@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <%- include('partials/head', { title }) %>
+  <body>
+    <%- include('partials/header') %>
+    <main>
+      <section class="hero">
+        <div class="hero-content">
+          <p class="eyebrow">Spare parts marketplace</p>
+          <h1>Find the right car parts, compare sellers, and order with confidence.</h1>
+          <p class="hero-copy">Browse normalized catalog parts, choose the seller offer that fits your budget, or customize ready-made maintenance packs before checkout.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="/parts">Browse parts</a>
+            <a class="button button-secondary" href="/packs">Explore packs</a>
+          </div>
+        </div>
+        <div class="hero-card" aria-label="Marketplace highlights">
+          <span class="status-pill">Phase 1 ready</span>
+          <h2>Core platform foundation</h2>
+          <ul>
+            <li>Express app structure</li>
+            <li>MongoDB connection setup</li>
+            <li>Role-protected dashboard routes</li>
+            <li>Responsive customer landing page</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section-shell">
+        <div class="section-heading">
+          <p class="eyebrow">Catalog starting points</p>
+          <h2>Shop by common systems</h2>
+        </div>
+        <div class="card-grid">
+          <% featuredCategories.forEach((category) => { %>
+            <article class="market-card">
+              <h3><%= category.name %></h3>
+              <p><%= category.description %></p>
+              <a href="/parts?category=<%= category.slug %>">View category</a>
+            </article>
+          <% }) %>
+        </div>
+      </section>
+
+      <section class="section-shell split-section">
+        <div>
+          <p class="eyebrow">Flexible bundles</p>
+          <h2>Ready-made packs that customers can modify.</h2>
+          <p>Future phases will allow optional item removal, compatible replacements, seller offer selection, and live price recalculation.</p>
+        </div>
+        <div class="pack-list">
+          <% featuredPacks.forEach((pack) => { %>
+            <article class="pack-card">
+              <span><%= pack.badge %></span>
+              <h3><%= pack.name %></h3>
+              <p><%= pack.items.join(' • ') %></p>
+            </article>
+          <% }) %>
+        </div>
+      </section>
+    </main>
+    <%- include('partials/footer') %>
+    <script src="/js/main.js"></script>
+  </body>
+</html>
