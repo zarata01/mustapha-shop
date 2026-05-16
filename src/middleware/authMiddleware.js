@@ -20,6 +20,16 @@ function requireRole(role) {
   };
 }
 
+
+function requireCustomerOrGuestCheckout(req, res, next) {
+  const user = req.session?.user;
+  if (!user || user.role === 'customer') return next();
+
+  const error = new Error('Seller and admin accounts cannot use customer checkout.');
+  error.status = 403;
+  return next(error);
+}
+
 const requireAdmin = requireRole('admin');
 const requireSeller = requireRole('seller');
 
@@ -27,6 +37,7 @@ module.exports = {
   attachCurrentUser,
   requireAuth,
   requireRole,
+  requireCustomerOrGuestCheckout,
   requireAdmin,
   requireSeller
 };

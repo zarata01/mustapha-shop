@@ -21,8 +21,9 @@ Phase 1 is started and includes:
 - Environment variable loading, MongoDB direct-URI fallback, and `.env.example`.
 - Session, security, rate-limit, static asset, and error middleware.
 - Responsive home page with customer navigation.
-- Placeholder routes for catalog, packs, cart, checkout, login, admin dashboard, and seller dashboard.
-- Initial integration tests for home, health, and protected admin routing.
+- Placeholder routes for catalog, packs, cart, checkout, admin dashboard, and seller dashboard.
+- Phase 2 authentication foundation with User and SellerProfile models, customer registration, login, logout, CSRF-protected forms, and role redirects.
+- Initial integration tests for home, health, protected routing, auth files, and database fallback behavior.
 
 ## Main goals
 
@@ -83,6 +84,10 @@ seed/              Seed scripts and sample data (future phases)
 Atlas `mongodb+srv://` connection strings require DNS SRV lookups. Some development networks, containers, and DNS resolvers block those lookups, which can produce errors such as `querySrv ECONNREFUSED`. If that happens, copy the Atlas standard connection string into `MONGODB_DIRECT_URI` in `.env`. The server will try `MONGODB_URI` first, then retry `MONGODB_DIRECT_URI` when the first connection fails because of DNS or network resolution.
 
 For local frontend work, `DB_REQUIRED=false` lets the server start even when MongoDB is temporarily unavailable. Production defaults to requiring the database, and credentials are redacted from database connection logs.
+
+## Authentication status
+
+Customer registration is available at `/auth/register`, login is available at `/auth/login`, and authenticated customers can view `/account`. Seller and admin users are supported by the `User` model and role middleware, but seller/admin account creation should be handled through seed data or future admin tooling so customers cannot promote themselves.
 
 ## Available scripts
 

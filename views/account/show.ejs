@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <%- include('../partials/head', { title }) %>
+  <body>
+    <%- include('../partials/header') %>
+    <main class="placeholder-page">
+      <section class="placeholder-card account-card">
+        <p class="eyebrow">My account</p>
+        <h1>Welcome, <%= currentUser.name %>.</h1>
+        <p>Your customer account is ready. Upcoming phases will add saved vehicles, order history, and order confirmation tracking.</p>
+        <dl class="account-details">
+          <div><dt>Email</dt><dd><%= currentUser.email %></dd></div>
+          <div><dt>Role</dt><dd><%= currentUser.role %></dd></div>
+        </dl>
+        <form action="/auth/logout" method="post">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button class="button button-secondary" type="submit">Logout</button>
+        </form>
+      </section>
+    </main>
+    <%- include('../partials/footer') %>
+    <script src="/js/main.js"></script>
+  </body>
+</html>

@@ -12,6 +12,7 @@ const routes = require('./routes');
 const { attachCurrentUser } = require('./middleware/authMiddleware');
 const { generalLimiter } = require('./middleware/rateLimitMiddleware');
 const { notFoundHandler, errorHandler } = require('./middleware/errorMiddleware');
+const { attachCsrfToken } = require('./middleware/csrfMiddleware');
 
 function createSessionStore(sessionMongoUri) {
   if (env.nodeEnv === 'test' || !sessionMongoUri) return undefined;
@@ -20,13 +21,14 @@ function createSessionStore(sessionMongoUri) {
 
 function createApp(options = {}) {
   const app = express();
-  const sessionMongoUri = options.sessionMongoUri ?? env.mongoUri;
+  const sessionMongoUri = options.sessionMongoUri || (options.databaseConnected ? env.mongoUri : null);
 
   app.set('env', env.nodeEnv);
   app.set('trust proxy', env.trustProxy);
   app.set('view engine', 'ejs');
   app.set('views', path.join(process.cwd(), 'views'));
   app.locals.databaseConnected = Boolean(options.databaseConnected);
+  app.locals.sessionName = env.sessionName;
 
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(compression());
@@ -51,6 +53,7 @@ function createApp(options = {}) {
     }
   }));
 
+  app.use(attachCsrfToken);
   app.use(attachCurrentUser);
   app.use(routes);
   app.use(notFoundHandler);

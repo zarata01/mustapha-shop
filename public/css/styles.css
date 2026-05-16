@@ -207,3 +207,103 @@ a { color: inherit; }
   .hero, .split-section { grid-template-columns: 1fr; min-height: auto; padding-block: 4rem; }
   .card-grid { grid-template-columns: 1fr; }
 }
+
+.auth-page {
+  max-width: 1180px;
+  margin: 0 auto;
+  min-height: 72vh;
+  padding: 4rem 1.25rem;
+  display: grid;
+  align-items: center;
+}
+
+.auth-panel {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(320px, .7fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.auth-panel h1 {
+  margin: 0;
+  color: var(--blueprint);
+  font-size: clamp(2.4rem, 5vw, 4.5rem);
+  letter-spacing: -.055em;
+  line-height: 1;
+}
+
+.auth-panel p { color: var(--muted); line-height: 1.7; }
+.compact-auth { max-width: 920px; margin: 0 auto; }
+
+.form-card {
+  display: grid;
+  gap: 1rem;
+  padding: 1.4rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.form-card label {
+  display: grid;
+  gap: .42rem;
+  color: var(--steel);
+  font-weight: 900;
+  font-size: .92rem;
+}
+
+.form-card input {
+  width: 100%;
+  min-height: 3rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: .8rem .9rem;
+  color: var(--ink);
+  font: inherit;
+  background: #fff;
+}
+
+.form-card input:focus {
+  outline: 3px solid rgb(255 122 26 / 20%);
+  border-color: var(--accent);
+}
+
+.field-error,
+.form-error {
+  color: #b91c1c;
+  font-weight: 800;
+  font-size: .86rem;
+}
+
+.form-error {
+  padding: .8rem;
+  border-radius: 14px;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+}
+
+.form-footnote { margin: 0; font-size: .92rem; }
+.form-footnote a { color: var(--accent-dark); font-weight: 900; }
+
+.account-details {
+  display: grid;
+  gap: .8rem;
+  margin: 1.5rem 0;
+}
+
+.account-details div {
+  display: grid;
+  gap: .25rem;
+  padding: .85rem 1rem;
+  border-radius: 16px;
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+}
+
+.account-details dt { color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .14em; font-weight: 900; }
+.account-details dd { margin: 0; font-weight: 900; color: var(--blueprint); }
+
+@media (max-width: 780px) {
+  .auth-panel { grid-template-columns: 1fr; }
+}

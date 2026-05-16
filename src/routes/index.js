@@ -1,6 +1,8 @@
 const express = require('express');
 const pageController = require('../controllers/pageController');
-const { requireAdmin, requireSeller } = require('../middleware/authMiddleware');
+const authController = require('../controllers/authController');
+const { requireAdmin, requireSeller, requireAuth, requireCustomerOrGuestCheckout } = require('../middleware/authMiddleware');
+const authRoutes = require('./authRoutes');
 
 const router = express.Router();
 
@@ -8,8 +10,9 @@ router.get('/', pageController.home);
 router.get('/parts', pageController.parts);
 router.get('/packs', pageController.packs);
 router.get('/cart', pageController.cart);
-router.get('/checkout', pageController.checkout);
-router.get('/auth/login', pageController.login);
+router.get('/checkout', requireCustomerOrGuestCheckout, pageController.checkout);
+router.use('/auth', authRoutes);
+router.get('/account', requireAuth, authController.account);
 router.get('/admin/dashboard', requireAdmin, pageController.adminDashboard);
 router.get('/seller/dashboard', requireSeller, pageController.sellerDashboard);
 
