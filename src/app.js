@@ -12,23 +12,19 @@ const routes = require('./routes');
 const { attachCurrentUser } = require('./middleware/authMiddleware');
 const { generalLimiter } = require('./middleware/rateLimitMiddleware');
 const { notFoundHandler, errorHandler } = require('./middleware/errorMiddleware');
-const { attachCsrfToken } = require('./middleware/csrfMiddleware');
 
-function createSessionStore(sessionMongoUri) {
-  if (env.nodeEnv === 'test' || !sessionMongoUri) return undefined;
-  return MongoStore.create({ mongoUrl: sessionMongoUri, collectionName: 'sessions' });
+function createSessionStore() {
+  if (env.nodeEnv === 'test') return undefined;
+  return MongoStore.create({ mongoUrl: env.mongoUri, collectionName: 'sessions' });
 }
 
-function createApp(options = {}) {
+function createApp() {
   const app = express();
-  const sessionMongoUri = options.sessionMongoUri || (options.databaseConnected ? env.mongoUri : null);
 
   app.set('env', env.nodeEnv);
   app.set('trust proxy', env.trustProxy);
   app.set('view engine', 'ejs');
   app.set('views', path.join(process.cwd(), 'views'));
-  app.locals.databaseConnected = Boolean(options.databaseConnected);
-  app.locals.sessionName = env.sessionName;
 
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(compression());
@@ -44,7 +40,7 @@ function createApp(options = {}) {
     secret: env.sessionSecret,
     resave: false,
     saveUninitialized: false,
-    store: createSessionStore(sessionMongoUri),
+    store: createSessionStore(),
     cookie: {
       httpOnly: true,
       sameSite: 'lax',
@@ -53,7 +49,6 @@ function createApp(options = {}) {
     }
   }));
 
-  app.use(attachCsrfToken);
   app.use(attachCurrentUser);
   app.use(routes);
   app.use(notFoundHandler);

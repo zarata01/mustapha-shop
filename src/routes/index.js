@@ -1,21 +1,15 @@
 const express = require('express');
 const pageController = require('../controllers/pageController');
-const authController = require('../controllers/authController');
-const { requireAdmin, requireSeller, requireAuth, requireCustomerOrGuestCheckout } = require('../middleware/authMiddleware');
-const authRoutes = require('./authRoutes');
-const catalogRoutes = require('./catalogRoutes');
-const adminCatalogRoutes = require('./adminCatalogRoutes');
+const { requireAdmin, requireSeller } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
 router.get('/', pageController.home);
+router.get('/parts', pageController.parts);
 router.get('/packs', pageController.packs);
 router.get('/cart', pageController.cart);
-router.get('/checkout', requireCustomerOrGuestCheckout, pageController.checkout);
-router.use(catalogRoutes);
-router.use('/auth', authRoutes);
-router.use('/admin', requireAdmin, adminCatalogRoutes);
-router.get('/account', requireAuth, authController.account);
+router.get('/checkout', pageController.checkout);
+router.get('/auth/login', pageController.login);
 router.get('/admin/dashboard', requireAdmin, pageController.adminDashboard);
 router.get('/seller/dashboard', requireSeller, pageController.sellerDashboard);
 
