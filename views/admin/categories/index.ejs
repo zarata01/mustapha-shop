@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <%- include('../../partials/head', { title }) %>
+  <body>
+    <%- include('../../partials/header') %>
+    <main class="catalog-page">
+      <section class="admin-heading">
+        <div>
+          <p class="eyebrow">Admin catalog</p>
+          <h1>Manage categories</h1>
+          <% if (!databaseReady) { %><p class="field-error">MongoDB is not connected. Create actions are disabled.</p><% } %>
+        </div>
+      </section>
+      <section class="catalog-layout">
+        <form class="form-card" action="/admin/categories" method="post">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <% if (errors.form) { %><div class="form-error"><%= errors.form %></div><% } %>
+          <label>Name<input name="name" value="<%= values.name || '' %>" required></label>
+          <label>Description<textarea name="description" rows="4"><%= values.description || '' %></textarea></label>
+          <label>Sort order<input name="sortOrder" type="number" value="<%= values.sortOrder || 0 %>"></label>
+          <button class="button button-primary" type="submit">Create category</button>
+        </form>
+        <div class="parts-results">
+          <div class="parts-grid">
+            <% categories.forEach((category) => { %>
+              <article class="market-card"><h3><%= category.name %></h3><p><%= category.description || 'No description yet.' %></p><a href="/categories/<%= category.slug %>">View</a></article>
+            <% }) %>
+          </div>
+        </div>
+      </section>
+    </main>
+    <%- include('../../partials/footer') %>
+    <script src="/js/main.js"></script>
+  </body>
+</html>

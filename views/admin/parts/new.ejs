@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <%- include('../../partials/head', { title }) %>
+  <body>
+    <%- include('../../partials/header') %>
+    <main class="auth-page">
+      <section class="auth-panel compact-auth">
+        <div>
+          <p class="eyebrow">Admin catalog</p>
+          <h1>Create catalog part.</h1>
+          <p>Prices are intentionally not stored here. Seller-specific prices will be managed as seller offers.</p>
+          <% if (!databaseReady) { %><p class="field-error">MongoDB is not connected. The form can be reviewed, but submit will not save.</p><% } %>
+        </div>
+        <form class="form-card" action="/admin/parts" method="post">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <% if (errors.form) { %><div class="form-error"><%= errors.form %></div><% } %>
+          <label>Name<input name="name" value="<%= values.name || '' %>" required><% if (errors.name) { %><span class="field-error"><%= errors.name %></span><% } %></label>
+          <label>Brand<input name="brand" value="<%= values.brand || '' %>" required><% if (errors.brand) { %><span class="field-error"><%= errors.brand %></span><% } %></label>
+          <label>Manufacturer part number<input name="manufacturerPartNumber" value="<%= values.manufacturerPartNumber || '' %>" required><% if (errors.manufacturerPartNumber) { %><span class="field-error"><%= errors.manufacturerPartNumber %></span><% } %></label>
+          <label>Category<select name="categoryId"><option value="">Unassigned</option><% categories.forEach((category) => { %><option value="<%= category._id || '' %>"><%= category.name %></option><% }) %></select></label>
+          <label>Description<textarea name="description" rows="4"><%= values.description || '' %></textarea></label>
+          <label>OEM numbers<textarea name="oemNumbers" rows="2" placeholder="One per line or comma separated"><%= (values.oemNumbers || []).join('\n') %></textarea></label>
+          <label>Aftermarket numbers<textarea name="aftermarketNumbers" rows="2"><%= (values.aftermarketNumbers || []).join('\n') %></textarea></label>
+          <label>Attributes<textarea name="attributes" rows="4" placeholder="position: Front&#10;material: Ceramic"><%= values.attributes ? Object.entries(values.attributes).map(([key, value]) => `${key}: ${value}`).join('\n') : '' %></textarea></label>
+          <label>Vehicle make<input name="makeName" value="<%= values.compatibility?.[0]?.makeName || '' %>"></label>
+          <label>Vehicle model<input name="modelName" value="<%= values.compatibility?.[0]?.modelName || '' %>"></label>
+          <button class="button button-primary" type="submit">Create part</button>
+        </form>
+      </section>
+    </main>
+    <%- include('../../partials/footer') %>
+    <script src="/js/main.js"></script>
+  </body>
+</html>
