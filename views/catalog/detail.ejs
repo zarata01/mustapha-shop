@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <%- include('../partials/head', { title }) %>
+  <body>
+    <%- include('../partials/header') %>
+    <main class="catalog-page">
+      <article class="part-detail">
+        <div class="part-gallery">
+          <div class="part-image-placeholder large"><%= (part.name || '?').slice(0, 2).toUpperCase() %></div>
+        </div>
+        <div class="part-detail-main">
+          <p class="eyebrow"><%= part.categoryName %></p>
+          <h1><%= part.name %></h1>
+          <p><%= part.description %></p>
+          <dl class="detail-list">
+            <div><dt>Brand</dt><dd><%= part.brand || '—' %></dd></div>
+            <div><dt>Manufacturer number</dt><dd><%= part.manufacturerPartNumber || '—' %></dd></div>
+            <div><dt>OEM numbers</dt><dd><%= (part.oemNumbers || []).join(', ') || '—' %></dd></div>
+            <div><dt>Aftermarket numbers</dt><dd><%= (part.aftermarketNumbers || []).join(', ') || '—' %></dd></div>
+          </dl>
+        </div>
+      </article>
+
+      <section class="detail-section">
+        <h2>Compatibility</h2>
+        <div class="compatibility-grid">
+          <% (part.compatibility || []).forEach((item) => { %>
+            <article>
+              <strong><%= [item.makeName, item.modelName, item.engineCode].filter(Boolean).join(' ') || 'Universal fit' %></strong>
+              <span><%= [item.startYear, item.endYear].filter(Boolean).join('–') || 'Year range pending' %></span>
+              <p><%= item.notes || 'No extra notes.' %></p>
+            </article>
+          <% }) %>
+        </div>
+      </section>
+
+      <section class="detail-section">
+        <h2>Flexible attributes</h2>
+        <dl class="detail-list">
+          <% Object.entries(part.attributes || {}).forEach(([key, value]) => { %>
+            <div><dt><%= key %></dt><dd><%= value %></dd></div>
+          <% }) %>
+        </dl>
+      </section>
+
+      <section class="detail-section">
+        <h2>Seller price comparison</h2>
+        <div class="seller-placeholder">
+          <p>Seller offers will be connected in Phase 4. This part currently reports <strong><%= part.offerSummary.sellerCount %></strong> sample seller offer(s), starting from <strong><%= part.offerSummary.startsFrom ? `${part.offerSummary.currency} ${part.offerSummary.startsFrom}` : 'pending' %></strong>.</p>
+        </div>
+      </section>
+    </main>
+    <%- include('../partials/footer') %>
+    <script src="/js/main.js"></script>
+  </body>
+</html>

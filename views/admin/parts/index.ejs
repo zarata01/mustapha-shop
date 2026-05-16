@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <%- include('../../partials/head', { title }) %>
+  <body>
+    <%- include('../../partials/header') %>
+    <main class="catalog-page">
+      <section class="admin-heading">
+        <div>
+          <p class="eyebrow">Admin catalog</p>
+          <h1>Manage spare parts</h1>
+          <% if (!databaseReady) { %><p class="field-error">MongoDB is not connected. Create/edit actions are disabled.</p><% } %>
+        </div>
+        <a class="button button-primary" href="/admin/parts/new">New part</a>
+      </section>
+      <section class="admin-table-card">
+        <table class="admin-table">
+          <thead><tr><th>Name</th><th>Brand</th><th>MPN</th><th>Category</th><th>Status</th></tr></thead>
+          <tbody>
+            <% parts.forEach((part) => { %>
+              <tr>
+                <td><a href="/parts/<%= part.slug %>"><%= part.name %></a></td>
+                <td><%= part.brand || '—' %></td>
+                <td><%= part.manufacturerPartNumber || '—' %></td>
+                <td><%= part.categoryName || '—' %></td>
+                <td><%= part.isActive === false ? 'Disabled' : 'Active' %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </section>
+    </main>
+    <%- include('../../partials/footer') %>
+    <script src="/js/main.js"></script>
+  </body>
+</html>

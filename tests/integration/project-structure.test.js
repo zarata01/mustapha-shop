@@ -17,11 +17,23 @@ test('phase 1 project structure exists', () => {
     'src/controllers/authController.js',
     'src/models/User.js',
     'src/models/SellerProfile.js',
+    'src/models/Category.js',
+    'src/models/Part.js',
+    'src/models/VehicleMake.js',
+    'src/models/VehicleModel.js',
+    'src/models/VehicleEngine.js',
     'src/validators/authValidators.js',
+    'src/validators/partValidators.js',
+    'src/services/catalogSearchService.js',
+    'src/controllers/catalogController.js',
+    'src/controllers/adminCatalogController.js',
     'src/utils/password.js',
     'views/home.ejs',
     'views/auth/login.ejs',
     'views/auth/register.ejs',
+    'views/catalog/list.ejs',
+    'views/catalog/detail.ejs',
+    'views/admin/parts/new.ejs',
     'public/css/styles.css',
     '.env.example'
   ].forEach((filePath) => {
@@ -32,7 +44,7 @@ test('phase 1 project structure exists', () => {
 test('routes include public pages, health check, and protected dashboards', () => {
   const routes = read('src/routes/index.js');
 
-  ['/', '/parts', '/packs', '/cart', '/checkout', '/account', '/health'].forEach((route) => {
+  ['/', '/packs', '/cart', '/checkout', '/account', '/health'].forEach((route) => {
     assert.match(routes, new RegExp(`['"]${route.replace('/', '\\/')}['"]`));
   });
 
@@ -83,4 +95,29 @@ test('authentication phase files include secure registration, login, logout, and
   assert.match(passwordUtils, /timingSafeEqual/);
   assert.match(userModel, /passwordHash/);
   assert.match(userModel, /select: false/);
+});
+
+
+test('catalog phase files include part/category routes, models, search service, and admin forms', () => {
+  const catalogRoutes = read('src/routes/catalogRoutes.js');
+  const adminCatalogRoutes = read('src/routes/adminCatalogRoutes.js');
+  const partModel = read('src/models/Part.js');
+  const categoryModel = read('src/models/Category.js');
+  const catalogService = read('src/services/catalogSearchService.js');
+  const adminController = read('src/controllers/adminCatalogController.js');
+  const catalogView = read('views/catalog/list.ejs');
+
+  assert.match(catalogRoutes, /router\.get\('\/parts'/);
+  assert.match(catalogRoutes, /router\.get\('\/parts\/:slug'/);
+  assert.match(catalogRoutes, /router\.get\('\/categories\/:slug'/);
+  assert.match(adminCatalogRoutes, /router\.post\('\/parts', requireCsrfToken/);
+  assert.match(adminCatalogRoutes, /router\.post\('\/categories', requireCsrfToken/);
+  assert.match(partModel, /standardIds/);
+  assert.match(partModel, /attributes/);
+  assert.match(partModel, /compatibility/);
+  assert.match(categoryModel, /parentId/);
+  assert.match(catalogService, /sampleParts/);
+  assert.match(catalogService, /searchParts/);
+  assert.match(adminController, /validatePart/);
+  assert.match(catalogView, /filter-form/);
 });

@@ -23,7 +23,8 @@ Phase 1 is started and includes:
 - Responsive home page with customer navigation.
 - Placeholder routes for catalog, packs, cart, checkout, admin dashboard, and seller dashboard.
 - Phase 2 authentication foundation with User and SellerProfile models, customer registration, login, logout, CSRF-protected forms, and role redirects.
-- Initial integration tests for home, health, protected routing, auth files, and database fallback behavior.
+- Phase 3 catalog foundation with category, part, and vehicle compatibility models, searchable customer catalog pages, part details, and admin catalog forms.
+- Initial integration tests for home, health, protected routing, auth files, catalog files, and database fallback behavior.
 
 ## Main goals
 
@@ -47,7 +48,7 @@ src/
   services/        Business logic (future phases)
   validators/      Request validation (future phases)
   utils/           Shared helpers (future phases)
-views/             EJS pages and partials
+views/             EJS pages, auth screens, catalog pages, and partials
 public/            Static CSS, JS, and uploads
 tests/             Node test runner suites
 seed/              Seed scripts and sample data (future phases)
@@ -88,6 +89,10 @@ For local frontend work, `DB_REQUIRED=false` lets the server start even when Mon
 ## Authentication status
 
 Customer registration is available at `/auth/register`, login is available at `/auth/login`, and authenticated customers can view `/account`. Seller and admin users are supported by the `User` model and role middleware, but seller/admin account creation should be handled through seed data or future admin tooling so customers cannot promote themselves.
+
+## Catalog status
+
+Customers can browse `/parts`, search/filter catalog records, open `/parts/:slug`, and browse `/categories/:slug`. When MongoDB has no active connection the catalog renders sample data so the UI remains reviewable. Admin users can open `/admin/parts`, `/admin/parts/new`, and `/admin/categories`; create actions require a live MongoDB connection and CSRF token.
 
 ## Available scripts
 

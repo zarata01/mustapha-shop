@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <%- include('../partials/head', { title }) %>
+  <body>
+    <%- include('../partials/header') %>
+    <main class="catalog-page">
+      <section class="catalog-hero">
+        <div>
+          <p class="eyebrow">Parts catalog</p>
+          <h1><%= currentCategory ? currentCategory.name : 'Search spare parts by system, identifier, or vehicle.' %></h1>
+          <p><%= currentCategory ? currentCategory.description : 'Catalog items are platform-standard parts. Seller-specific prices will be attached as offers in the next phase.' %></p>
+          <% if (usingSampleData) { %><span class="status-pill">Showing sample data until MongoDB has catalog records</span><% } %>
+        </div>
+      </section>
+
+      <section class="catalog-layout">
+        <aside class="filter-panel">
+          <form action="/parts" method="get" class="filter-form">
+            <label>
+              Search
+              <input name="q" type="search" value="<%= filters.q || '' %>" placeholder="Name, OEM, part number">
+            </label>
+            <label>
+              Category
+              <select name="category">
+                <option value="">All categories</option>
+                <% categories.forEach((category) => { %>
+                  <option value="<%= category.slug %>" <%= filters.category === category.slug ? 'selected' : '' %>><%= category.name %></option>
+                <% }) %>
+              </select>
+            </label>
+            <label>
+              Brand
+              <input name="brand" type="text" value="<%= filters.brand || '' %>" placeholder="RoadGrip">
+            </label>
+            <label>
+              Vehicle make
+              <input name="make" type="text" value="<%= filters.make || '' %>" placeholder="Toyota">
+            </label>
+            <button class="button button-primary" type="submit">Apply filters</button>
+          </form>
+          <div class="category-links">
+            <h2>Categories</h2>
+            <% categories.forEach((category) => { %>
+              <a href="/categories/<%= category.slug %>"><%= category.name %></a>
+            <% }) %>
+          </div>
+        </aside>
+
+        <section class="parts-results">
+          <div class="results-heading">
+            <h2><%= total %> part<%= total === 1 ? '' : 's' %> found</h2>
+          </div>
+          <div class="parts-grid">
+            <% parts.forEach((part) => { %>
+              <article class="part-card">
+                <div class="part-image-placeholder"><%= (part.name || '?').slice(0, 2).toUpperCase() %></div>
+                <div>
+                  <p class="part-category"><%= part.categoryName %></p>
+                  <h3><a href="/parts/<%= part.slug %>"><%= part.name %></a></h3>
+                  <p><%= part.description %></p>
+                  <dl class="part-meta">
+                    <div><dt>Brand</dt><dd><%= part.brand || '—' %></dd></div>
+                    <div><dt>MPN</dt><dd><%= part.manufacturerPartNumber || '—' %></dd></div>
+                    <div><dt>Sellers</dt><dd><%= part.offerSummary.sellerCount %></dd></div>
+                  </dl>
+                  <div class="card-actions">
+                    <span class="price-chip"><%= part.offerSummary.startsFrom ? `From ${part.offerSummary.currency} ${part.offerSummary.startsFrom}` : 'Offers pending' %></span>
+                    <a class="button button-secondary" href="/parts/<%= part.slug %>">Details</a>
+                  </div>
+                </div>
+              </article>
+            <% }) %>
+          </div>
+        </section>
+      </section>
+    </main>
+    <%- include('../partials/footer') %>
+    <script src="/js/main.js"></script>
+    <script src="/js/catalogFilters.js"></script>
+  </body>
+</html>
